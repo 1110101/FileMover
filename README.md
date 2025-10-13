@@ -5,51 +5,57 @@
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Eine Windows-Systray-Anwendung zum automatischen Verschieben von Dateien basierend auf Dateiendungen mit Timer-basierter Verzögerung.
+A Windows system tray application for automatic file organization based on file extensions with configurable delay-based moving.
 
-## Beschreibung
+---
 
-FileMover überwacht Quellordner in Echtzeit und verschiebt Dateien mit bestimmten Endungen nach einer konfigurierbaren Wartezeit automatisch in Zielordner. Die Anwendung läuft im Hintergrund im System Tray und bietet eine optionale GUI zur Konfiguration.
+**🇩🇪 Für deutschsprachige Nutzer:** FileMover ist eine Windows-Anwendung, die automatisch Dateien basierend auf Dateiendungen verschiebt. Die App läuft im System Tray und überwacht Ordner in Echtzeit. Dateien werden nach einer konfigurierbaren Wartezeit automatisch verschoben. Perfekt zum Organisieren von Downloads, Dokumenten und mehr!
+
+---
+
+## Description
+
+FileMover monitors source folders in real-time and automatically moves files with specific extensions to target folders after a configurable wait time. The application runs in the background in the system tray and offers an optional GUI for configuration.
 
 ## Features
 
-- 🖥️ **System Tray Integration**: Läuft unsichtbar im Hintergrund, jederzeit über Systray-Icon erreichbar
-- ⏱️ **Timer-basiertes Verschieben**: Konfigurierbare Wartezeit (in Minuten) bevor Dateien verschoben werden
-- 🚀 **Windows-Autostart**: Optional beim Windows-Start automatisch starten
-- 🔄 **Echtzeit-Überwachung**: Watchdog überwacht Ordner und erkennt neue Dateien sofort
-- 🎛️ **Auto-Move Toggle**: Automatisches Verschieben ein-/ausschalten ohne Regeln zu löschen
-- 🧪 **Dry Run Mode**: Test-Modus zum Prüfen was verschoben würde, ohne Dateien zu bewegen
-- 📁 **Mehrere Regeln**: Beliebig viele Verschiebe-Regeln konfigurierbar
-- 🎯 **Dateifilter**: Filterung nach Dateiendungen (z.B. `.pdf`, `.jpg`, `.docx`)
-- 💾 **Persistente Konfiguration**: Speicherung aller Einstellungen in der Windows-Registry
-- 📝 **Activity Log**: Detaillierte Protokollierung aller Aktionen im GUI
-- ⚡ **Manuelle Ausführung**: "Move Now" - sofortiges Verschieben ohne Wartezeit
-- 🔒 **File-Lock-Check**: Verhindert Verschieben von noch in Bearbeitung befindlichen Dateien
-- 📐 **Resizable GUI**: Vergrößerbares Fenster mit anpassbaren Listen und Logs
-- 🐛 **Crash-Logging**: Automatische Fehlerprotokollierung bei unerwarteten Abstürzen
+- 🖥️ **System Tray Integration**: Runs invisibly in the background, accessible via system tray icon
+- ⏱️ **Delay-Based Moving**: Configurable wait time (in minutes) before files are moved
+- 🚀 **Windows Autostart**: Optionally start automatically with Windows
+- 🔄 **Real-Time Monitoring**: Watchdog monitors folders and detects new files instantly
+- 🎛️ **Auto-Move Toggle**: Enable/disable automatic moving without deleting rules
+- 🧪 **Dry Run Mode**: Test mode to preview what would be moved without actually moving files
+- 📁 **Multiple Rules**: Configure as many move rules as needed
+- 🎯 **File Filtering**: Filter by file extensions (e.g., `.pdf`, `.jpg`, `.docx`)
+- 💾 **Persistent Configuration**: All settings stored in Windows Registry
+- 📝 **Activity Log**: Detailed logging of all actions in the GUI
+- ⚡ **Manual Execution**: "Move Now" - immediate moving without wait time
+- 🔒 **File Lock Check**: Prevents moving files that are still in use
+- 📐 **Resizable GUI**: Expandable window with resizable lists and logs
+- 🐛 **Crash Logging**: Automatic error logging for unexpected crashes
 
-## Voraussetzungen
+## Requirements
 
-- Windows Betriebssystem (Windows 10 oder höher empfohlen)
+- Windows Operating System (Windows 10 or higher recommended)
 
 ## Installation
 
-### Option 1: Fertige .exe (Empfohlen für Endnutzer)
+### Option 1: Pre-built .exe (Recommended for End Users)
 
-**Kein Python oder Installation nötig!**
+**No Python or installation needed!**
 
-1. Gehe zu [Releases](https://github.com/1110101/FileMover/releases)
-2. Lade die neueste `move.exe` herunter
-3. Starte die `.exe` direkt - fertig! 🎉
+1. Go to [Releases](https://github.com/1110101/FileMover/releases)
+2. Download the latest `move.exe`
+3. Run the `.exe` directly - done! 🎉
 
-Die Anwendung läuft sofort im System Tray.
+The application will start immediately in the system tray.
 
-### Option 2: Aus Quellcode (Für Entwickler)
+### Option 2: From Source (For Developers)
 
-Falls du den Code anpassen oder selbst bauen möchtest:
+If you want to modify the code or build it yourself:
 
-**Voraussetzungen:**
-- Python 3.7 oder höher
+**Requirements:**
+- Python 3.7 or higher
 
 **Installation:**
 ```bash
@@ -58,144 +64,144 @@ cd FileMover
 pip install -r requirements.txt
 ```
 
-## Verwendung
+## Usage
 
-### Anwendung starten
+### Starting the Application
 
-**Mit der .exe:**
+**With the .exe:**
 ```
-Doppelklick auf move.exe
+Double-click move.exe
 ```
 
-**Aus Quellcode (Entwickler):**
+**From Source (Developers):**
 ```bash
 python move.py
 ```
 
-Die App startet im System Tray (Taskleiste rechts unten). Klicke auf das Icon für Optionen.
+The app starts in the system tray (bottom right of taskbar). Click the icon for options.
 
-### System Tray Menü
+### System Tray Menu
 
-- **Öffnen**: Öffnet das Konfigurations-Fenster (alternativ: Doppelklick auf Icon)
-- **Beenden**: Schließt die Anwendung komplett
+- **Open**: Opens the configuration window (alternatively: double-click on icon)
+- **Quit**: Closes the application completely
 
-### Konfiguration
+### Configuration
 
-1. **Doppelklick auf Systray-Icon** oder Rechtsklick → "Öffnen"
-2. Im Konfigurationsfenster:
+1. **Double-click on system tray icon** or right-click → "Open"
+2. In the configuration window:
 
-#### Neue Regel erstellen
+#### Creating a New Rule
 
-1. **Source Folder**: Wähle den Quellordner, der überwacht werden soll
-2. **Target Folder**: Wähle den Zielordner, wohin die Dateien verschoben werden
-3. **File Extensions**: Gebe die Dateiendungen ein (mit Komma getrennt, z.B. `.pdf, .jpg, .png`)
-4. Klicke auf **"Add Rule"**
+1. **Source Folder**: Select the source folder to monitor
+2. **Target Folder**: Select the target folder where files should be moved
+3. **File Extensions**: Enter file extensions (comma-separated, e.g., `.pdf, .jpg, .png`)
+4. Click **"Add Rule"**
 
-#### Einstellungen & Aktionen
+#### Settings & Actions
 
-- **Wait Time**: Lege fest, wie lange nach Datei-Erkennung gewartet werden soll (1-60 Minuten)
-  - Klicke auf **"Update"** zum Speichern
-- **Auto-Move Toggle**: Schalte automatisches Verschieben ein/aus
-  - 🟢 Grün = Aktiv, Dateien werden automatisch verschoben
-  - 🔴 Rot = Inaktiv, Dateien werden nur in Warteschlange gehalten
-- **Autostart Toggle**: Windows-Autostart aktivieren/deaktivieren
-  - ✓ ON = App startet mit Windows
-  - OFF = Manueller Start erforderlich
+- **Wait Time**: Set how long to wait after file detection before moving (1-60 minutes)
+  - Click **"Update"** to save
+- **Auto-Move Toggle**: Enable/disable automatic moving
+  - 🟢 Green = Active, files will be moved automatically
+  - 🔴 Red = Inactive, files will only be queued but not moved
+- **Autostart Toggle**: Enable/disable Windows autostart
+  - ✓ ON = App starts with Windows
+  - OFF = Manual start required
 
-#### Aktionen
+#### Actions
 
-- **Dry Run**: Aktiviere diesen Modus für Test-Läufe (zeigt nur was passieren würde)
-- **Show Waiting Files**: Zeige alle Dateien die aktuell in der Warteschlange sind
-- **Move Now**: Verschiebe alle wartenden Dateien sofort (ignoriert Timer)
+- **Dry Run**: Enable this mode for test runs (shows what would happen without moving files)
+- **Show Waiting Files**: Display all files currently in the queue
+- **Move Now**: Move all waiting files immediately (ignores timer)
 
-#### Regel bearbeiten
+#### Editing a Rule
 
-- Doppelklick auf eine Regel in der Liste lädt sie zur Bearbeitung
+- Double-click on a rule in the list to load it for editing
 
-#### Regel löschen
+#### Deleting a Rule
 
-- Wähle eine Regel aus und klicke auf **"Remove Selected"**
+- Select a rule and click **"Remove Selected"**
 
-### GUI schließen
+### Closing the GUI
 
-Das Schließen des Fensters beendet die App NICHT - sie läuft weiter im System Tray. Um die App komplett zu beenden: Rechtsklick auf Systray-Icon → "Beenden"
+Closing the window does NOT quit the app - it continues running in the system tray. To completely quit the app: Right-click on system tray icon → "Quit"
 
-## Beispiel-Workflow
+## Example Workflow
 
-1. Quellordner: `D:/Downloads`
-2. Zielordner: `D:/Dokumente/PDFs`
-3. Endungen: `.pdf`
-4. Delay: `5` Minuten
-5. **Ergebnis**: Wenn eine PDF-Datei in Downloads auftaucht, wird sie nach 5 Minuten automatisch nach `D:/Dokumente/PDFs` verschoben
+1. Source folder: `D:/Downloads`
+2. Target folder: `D:/Documents/PDFs`
+3. Extensions: `.pdf`
+4. Delay: `5` minutes
+5. **Result**: When a PDF file appears in Downloads, it will be automatically moved to `D:/Documents/PDFs` after 5 minutes
 
-**Warum Delay?** Dies verhindert, dass Dateien verschoben werden, die noch heruntergeladen oder bearbeitet werden.
+**Why Delay?** This prevents moving files that are still being downloaded or edited.
 
-## .exe selbst bauen (Optional)
+## Building the .exe Yourself (Optional)
 
-Falls du die `.exe` selbst bauen möchtest:
+If you want to build the `.exe` yourself:
 
-**Automatisch mit Build-Script:**
+**Automatically with Build Script:**
 ```bash
 build.bat
 ```
 
-**Manuell:**
+**Manually:**
 ```bash
 pip install -r requirements.txt
 pyinstaller move.spec
 ```
 
-Die `.exe` wird im `dist/`-Ordner erstellt.
+The `.exe` will be created in the `dist/` folder.
 
-**Hinweis:** Normalerweise kannst du einfach die fertige `.exe` aus den [Releases](https://github.com/1110101/FileMover/releases) verwenden!
+**Note:** Usually you can simply use the pre-built `.exe` from the [Releases](https://github.com/1110101/FileMover/releases)!
 
-## Konfiguration & Datenspeicherung
+## Configuration & Data Storage
 
-Die Konfiguration wird persistent in der Windows-Registry gespeichert:
+Configuration is stored persistently in the Windows Registry:
 
-**Einstellungen** (`HKEY_CURRENT_USER\Software\FileMover\Config`):
-- `move_rules` - Alle Verschiebe-Regeln
-- `delay_minutes` - Wartezeit in Minuten
-- `auto_move_enabled` - Status des Auto-Move-Toggles
+**Settings** (`HKEY_CURRENT_USER\Software\FileMover\Config`):
+- `move_rules` - All move rules
+- `delay_minutes` - Wait time in minutes
+- `auto_move_enabled` - Auto-Move toggle status
 
 **Autostart** (`HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`):
-- `FileMover` - Pfad zur Anwendung (wenn Autostart aktiviert)
+- `FileMover` - Application path (when autostart is enabled)
 
-**Crash-Logs**: `filemover_crash.log` im Programmverzeichnis
+**Crash Logs**: `filemover_crash.log` in the program directory
 
-## Technische Details
+## Technical Details
 
 - **GUI**: tkinter
 - **System Tray**: pystray
 - **Icons**: Pillow (PIL)
-- **Dateiüberwachung**: watchdog
-- **Queue-System**: Threading mit individuellen Timern pro Datei
-- **Speicherung**: Windows Registry (winreg)
+- **File Monitoring**: watchdog
+- **Queue System**: Threading with individual timers per file
+- **Storage**: Windows Registry (winreg)
 - **Build**: PyInstaller
 
-## Architektur
+## Architecture
 
 ```
-move.py          - Haupteinstiegspunkt, Systray-Integration
-gui.py           - GUI-Komponenten (tkinter)
+move.py          - Main entry point, system tray integration
+gui.py           - GUI components (tkinter)
 file_manager.py  - FileQueueManager, FileEventHandler, MoveRule
-config.py        - Registry-Operationen, Konfigurationsverwaltung
+config.py        - Registry operations, configuration management
 ```
 
-## Abhängigkeiten
+## Dependencies
 
-- `watchdog` - Datei-System-Überwachung
-- `pystray` - System Tray Integration
-- `Pillow` - Icon-Erstellung
-- `tkinter` - GUI (in Python enthalten)
+- `watchdog` - File system monitoring
+- `pystray` - System tray integration
+- `Pillow` - Icon creation
+- `tkinter` - GUI (included with Python)
 
-## Lizenz
+## License
 
-Dieses Projekt steht unter der MIT-Lizenz.
+This project is licensed under the MIT License.
 
-## Hinweise
+## Notes
 
-- Die Anwendung wurde für Windows entwickelt
-- Stelle sicher, dass du Schreibrechte für Ziel- und Quellordner hast
-- Bei Verwendung von Netzlaufwerken kann die Überwachung langsamer sein
+- This application was developed for Windows
+- Ensure you have write permissions for both source and target folders
+- When using network drives, monitoring may be slower
 

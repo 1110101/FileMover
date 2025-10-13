@@ -1,103 +1,103 @@
-# FileMover - Schnellstart
+# FileMover - Quick Start Guide
 
-## Installation & Start
+## Installation & Launch
 
-### 1. Dependencies installieren
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Anwendung starten
+### 2. Start the Application
 ```bash
 python move.py
 ```
 
-Die App erscheint im System Tray (rechts unten in der Taskleiste).
+The app appears in the system tray (bottom right of the taskbar).
 
-## Erste Schritte
+## Getting Started
 
-### 1. GUI öffnen
-- **Doppelklick** auf das FileMover-Icon im System Tray
-- Oder: **Rechtsklick** → "Öffnen"
+### 1. Open the GUI
+- **Double-click** the FileMover icon in the system tray
+- Or: **Right-click** → "Open"
 
-### 2. Delay einstellen
-- Standardwert ist 5 Minuten
-- Passe den Wert an (z.B. 1 Minute für Tests)
-- Klicke **"Update Delay"**
+### 2. Set the Delay
+- Default is 5 minutes
+- Adjust the value (e.g., 1 minute for testing)
+- Click **"Update"**
 
-### 3. Erste Regel hinzufügen
+### 3. Add Your First Rule
 
-**Beispiel: PDFs aus Downloads verschieben**
+**Example: Move PDFs from Downloads**
 
-1. **Source Folder**: `C:\Users\IhrName\Downloads`
-2. **Target Folder**: `C:\Users\IhrName\Documents\PDFs`
+1. **Source Folder**: `C:\Users\YourName\Downloads`
+2. **Target Folder**: `C:\Users\YourName\Documents\PDFs`
 3. **File Extensions**: `.pdf`
-4. Klicke **"Add Rule"**
+4. Click **"Add Rule"**
 
-### 4. Testen
+### 4. Testing
 
-**Option A: Manuell testen**
-- Klicke **"Move Now"** → Dateien werden sofort verschoben
+**Option A: Manual Test**
+- Click **"Move Now"** → Files are moved immediately
 
-**Option B: Automatisch testen**
-- Lege eine PDF-Datei in den Downloads-Ordner
-- Warte die eingestellte Delay-Zeit
-- Die Datei wird automatisch verschoben
+**Option B: Automatic Test**
+- Place a PDF file in the Downloads folder
+- Wait for the configured delay time
+- The file will be moved automatically
 
-**Queue überprüfen:**
-- Klicke **"Refresh Queue"** um wartende Dateien zu sehen
+**Check Queue:**
+- Click **"Show Waiting Files"** to see pending files
 
-## Autostart aktivieren
+## Enable Autostart
 
-1. **Rechtsklick** auf System Tray Icon
-2. Klicke **"Autostart"** um zu aktivieren
-3. FileMover startet jetzt automatisch mit Windows
+1. Open the GUI
+2. Click **"Autostart: OFF"** button to enable
+3. FileMover will now start automatically with Windows
 
-## Tipps
+## Tips
 
-### Mehrere Dateitypen
+### Multiple File Types
 ```
 .pdf, .docx, .xlsx, .pptx
 ```
 
-### Bilder organisieren
-- **Source**: `C:\Users\IhrName\Downloads`
-- **Target**: `C:\Users\IhrName\Pictures\FromDownloads`
+### Organize Images
+- **Source**: `C:\Users\YourName\Downloads`
+- **Target**: `C:\Users\YourName\Pictures\FromDownloads`
 - **Extensions**: `.jpg, .jpeg, .png, .gif, .webp`
 
-### Videos organisieren
-- **Source**: `C:\Users\IhrName\Downloads`
-- **Target**: `C:\Users\IhrName\Videos\FromDownloads`
+### Organize Videos
+- **Source**: `C:\Users\YourName\Downloads`
+- **Target**: `C:\Users\YourName\Videos\FromDownloads`
 - **Extensions**: `.mp4, .mkv, .avi, .mov`
 
-## Executable erstellen
+## Build Executable
 
 ```bash
 build.bat
 ```
 
-Die `.exe` ist dann in `dist\move.exe`
+The `.exe` will be in `dist\move.exe`
 
-## Fehlerbehebung
+## Troubleshooting
 
-**App erscheint nicht im System Tray:**
-- Prüfe ob Python-Prozess läuft (Task-Manager)
-- Prüfe Konsolen-Output auf Fehler
+**App doesn't appear in system tray:**
+- Check if Python process is running (Task Manager)
+- Check console output for errors
 
-**Dateien werden nicht verschoben:**
-- Prüfe ob Source-Folder existiert
-- Prüfe "Activity Log" in der GUI
-- Klicke "Refresh Queue" um wartende Dateien zu sehen
+**Files are not being moved:**
+- Verify that the source folder exists
+- Check the "Activity Log" in the GUI
+- Click "Show Waiting Files" to see queued files
 
-**GUI reagiert nicht:**
-- Schließe das Fenster (läuft weiter im Tray)
-- Öffne erneut über System Tray Icon
+**GUI not responding:**
+- Close the window (app continues in tray)
+- Reopen via system tray icon
 
-## Die App beenden
+## Quitting the App
 
-**Komplett beenden:**
-- **Rechtsklick** auf System Tray Icon
-- Klicke **"Beenden"**
+**Complete shutdown:**
+- **Right-click** on system tray icon
+- Click **"Quit"**
 
-**Wichtig:** Das Schließen des GUI-Fensters beendet die App NICHT! Sie läuft weiter im Hintergrund.
+**Important:** Closing the GUI window does NOT quit the app! It continues running in the background.
 

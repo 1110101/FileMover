@@ -39,5 +39,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - File lock checking before moving
 - Safe error handling without data loss
 
-[1.0.0]: https://github.com/yourusername/FileMover/releases/tag/v1.0.0
+[1.0.0]: https://github.com/1110101/FileMover/releases/tag/v1.0.0
 
