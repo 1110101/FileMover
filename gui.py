@@ -209,9 +209,9 @@ class FileMoverGUI:
             self.update_rule_list()
             self.target_folder.delete(0, tk.END)
             self.extensions.delete(0, tk.END)
-            self.status_bar.config(text=f"Rule added: {source} -> {target}")
+            self.status_bar.config(text=f"✓ Rule added: {source} -> {target}", bg='#E8F5E9')
         except Exception as e:
-            self.status_bar.config(text=f"Error: {e}")
+            self.status_bar.config(text=f"❌ Error adding rule: {e}", bg='#FFEBEE')
     
     def _remove_rule(self):
         """Remove selected rule"""
@@ -268,13 +268,16 @@ class FileMoverGUI:
     
     def _toggle_auto_move(self):
         """Toggle auto-move on/off"""
-        enabled = self.app.toggle_auto_move()
-        if enabled:
-            self.auto_move_button.config(text="🟢 Auto-Move: ON", bg='#4CAF50')
-            self.status_bar.config(text="✓ Automatic file moving enabled", bg='#E8F5E9')
-        else:
-            self.auto_move_button.config(text="🔴 Auto-Move: OFF", bg='#F44336')
-            self.status_bar.config(text="⚠ Automatic file moving disabled - files won't be moved automatically", bg='#FFF3E0')
+        try:
+            enabled = self.app.toggle_auto_move()
+            if enabled:
+                self.auto_move_button.config(text="🟢 Auto-Move: ON", bg='#4CAF50')
+                self.status_bar.config(text="✓ Automatic file moving enabled", bg='#E8F5E9')
+            else:
+                self.auto_move_button.config(text="🔴 Auto-Move: OFF", bg='#F44336')
+                self.status_bar.config(text="⚠ Automatic file moving disabled - files won't be moved automatically", bg='#FFF3E0')
+        except Exception as e:
+            self.status_bar.config(text=f"❌ Error toggling auto-move: {e}", bg='#FFEBEE')
     
     def _toggle_autostart(self):
         """Toggle Windows autostart on/off"""

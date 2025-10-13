@@ -15,6 +15,18 @@ class ConfigManager:
     """Manages application configuration in Windows Registry"""
     
     @staticmethod
+    def test_registry_access():
+        """Test if we can read/write to registry"""
+        try:
+            # Try to create and write to test key
+            with winreg.CreateKey(winreg.HKEY_CURRENT_USER, REG_PATH) as key:
+                winreg.SetValueEx(key, "_test", 0, winreg.REG_SZ, "test")
+                winreg.DeleteValue(key, "_test")
+            return True, None
+        except Exception as e:
+            return False, str(e)
+    
+    @staticmethod
     def load_rules():
         """Load move rules from registry"""
         try:

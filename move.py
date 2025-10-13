@@ -21,6 +21,18 @@ class FileMoverApp:
     
     def __init__(self):
         self.config = ConfigManager()
+        
+        # Test registry access
+        registry_ok, registry_error = self.config.test_registry_access()
+        if not registry_ok:
+            raise Exception(
+                f"Cannot access Windows Registry for configuration storage.\n\n"
+                f"Error: {registry_error}\n\n"
+                f"FileMover requires registry access under:\n"
+                f"HKEY_CURRENT_USER\\Software\\FileMover\\Config\n\n"
+                f"Please check your Windows permissions."
+            )
+        
         self.delay_minutes = self.config.load_delay()
         self.queue_manager = FileQueueManager(self.delay_minutes, self._log)
         self.observer_manager = FileObserverManager(self.queue_manager, lambda: self._auto_move_enabled)
