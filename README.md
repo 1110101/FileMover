@@ -30,19 +30,31 @@ FileMover überwacht Quellordner in Echtzeit und verschiebt Dateien mit bestimmt
 
 ## Voraussetzungen
 
-- Windows Betriebssystem
-- Python 3.7 oder höher
+- Windows Betriebssystem (Windows 10 oder höher empfohlen)
 
 ## Installation
 
-1. Repository klonen oder herunterladen:
-```bash
-git clone <repository-url>
-cd FileMover
-```
+### Option 1: Fertige .exe (Empfohlen für Endnutzer)
 
-2. Abhängigkeiten installieren:
+**Kein Python oder Installation nötig!**
+
+1. Gehe zu [Releases](https://github.com/1110101/FileMover/releases)
+2. Lade die neueste `move.exe` herunter
+3. Starte die `.exe` direkt - fertig! 🎉
+
+Die Anwendung läuft sofort im System Tray.
+
+### Option 2: Aus Quellcode (Für Entwickler)
+
+Falls du den Code anpassen oder selbst bauen möchtest:
+
+**Voraussetzungen:**
+- Python 3.7 oder höher
+
+**Installation:**
 ```bash
+git clone https://github.com/1110101/FileMover.git
+cd FileMover
 pip install -r requirements.txt
 ```
 
@@ -50,14 +62,14 @@ pip install -r requirements.txt
 
 ### Anwendung starten
 
-**Als Python-Script:**
-```bash
-python move.py
+**Mit der .exe:**
+```
+Doppelklick auf move.exe
 ```
 
-**Als .exe ausführen:**
-```
-dist\move.exe
+**Aus Quellcode (Entwickler):**
+```bash
+python move.py
 ```
 
 Die App startet im System Tray (Taskleiste rechts unten). Klicke auf das Icon für Optionen.
@@ -118,25 +130,24 @@ Das Schließen des Fensters beendet die App NICHT - sie läuft weiter im System 
 
 **Warum Delay?** Dies verhindert, dass Dateien verschoben werden, die noch heruntergeladen oder bearbeitet werden.
 
-## .exe erstellen (Build)
+## .exe selbst bauen (Optional)
 
-Die Anwendung kann mit dem mitgelieferten Build-Script kompiliert werden:
+Falls du die `.exe` selbst bauen möchtest:
 
-**Windows:**
+**Automatisch mit Build-Script:**
 ```bash
 build.bat
 ```
 
-Das Script:
-1. Installiert automatisch alle Dependencies
-2. Führt PyInstaller mit der move.spec-Konfiguration aus
-3. Erstellt die .exe im `dist`-Ordner
-
-**Manuell bauen:**
+**Manuell:**
 ```bash
 pip install -r requirements.txt
 pyinstaller move.spec
 ```
+
+Die `.exe` wird im `dist/`-Ordner erstellt.
+
+**Hinweis:** Normalerweise kannst du einfach die fertige `.exe` aus den [Releases](https://github.com/1110101/FileMover/releases) verwenden!
 
 ## Konfiguration & Datenspeicherung
 
