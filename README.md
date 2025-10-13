@@ -7,9 +7,11 @@
 
 A Windows system tray application for automatic file organization based on file extensions with configurable delay-based moving.
 
+**Full Disclosure: Core logic self coded, all other stuff like GUI, Systray, Registry was vibe coded with gemini and cursor**
+
 ---
 
-**🇩🇪 Für deutschsprachige Nutzer:** FileMover ist eine Windows-Anwendung, die automatisch Dateien basierend auf Dateiendungen verschiebt. Die App läuft im System Tray und überwacht Ordner in Echtzeit. Dateien werden nach einer konfigurierbaren Wartezeit automatisch verschoben. Perfekt zum Organisieren von Downloads, Dokumenten und mehr!
+**🇩🇪 Für deutschsprachige Nutzer:** FileMover ist eine Windows-Anwendung, die automatisch Dateien basierend auf Dateiendungen verschiebt. Die App kann im System Tray laufen und Ordner in Echtzeit überwachen. Haupt-Usecase ist das Verwalten und Organisieren des Downloadordners.
 
 ---
 
@@ -17,10 +19,11 @@ A Windows system tray application for automatic file organization based on file 
 
 FileMover monitors source folders in real-time and automatically moves files with specific extensions to target folders after a configurable wait time. The application runs in the background in the system tray and offers an optional GUI for configuration.
 
+Mainly written to automatically move files out of a overflowing download folder.
+
 ## Features
 
 - 🖥️ **System Tray Integration**: Runs invisibly in the background, accessible via system tray icon
-- ⏱️ **Delay-Based Moving**: Configurable wait time (in minutes) before files are moved
 - 🚀 **Windows Autostart**: Optionally start automatically with Windows
 - 🔄 **Real-Time Monitoring**: Watchdog monitors folders and detects new files instantly
 - 🎛️ **Auto-Move Toggle**: Enable/disable automatic moving without deleting rules
@@ -28,11 +31,8 @@ FileMover monitors source folders in real-time and automatically moves files wit
 - 📁 **Multiple Rules**: Configure as many move rules as needed
 - 🎯 **File Filtering**: Filter by file extensions (e.g., `.pdf`, `.jpg`, `.docx`)
 - 💾 **Persistent Configuration**: All settings stored in Windows Registry
-- 📝 **Activity Log**: Detailed logging of all actions in the GUI
 - ⚡ **Manual Execution**: "Move Now" - immediate moving without wait time
 - 🔒 **File Lock Check**: Prevents moving files that are still in use
-- 📐 **Resizable GUI**: Expandable window with resizable lists and logs
-- 🐛 **Crash Logging**: Automatic error logging for unexpected crashes
 
 ## Requirements
 
@@ -134,7 +134,7 @@ Closing the window does NOT quit the app - it continues running in the system tr
 4. Delay: `5` minutes
 5. **Result**: When a PDF file appears in Downloads, it will be automatically moved to `D:/Documents/PDFs` after 5 minutes
 
-**Why Delay?** This prevents moving files that are still being downloaded or edited.
+**Why Delay?** Right after downloading you usually just want to open the file right away. This would be not possible then, also the chrome download history cannot find the file then.
 
 ## Building the .exe Yourself (Optional)
 
@@ -204,4 +204,5 @@ This project is licensed under the MIT License.
 - This application was developed for Windows
 - Ensure you have write permissions for both source and target folders
 - When using network drives, monitoring may be slower
+- Again, almost anything was (painstakingly) vibe coded, but manually reviewed. But I'm not a python dev.
 
