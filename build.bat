@@ -37,6 +37,7 @@ echo.
 echo [2/4] Cleaning previous build...
 if exist build rmdir /s /q build
 if exist dist\move.exe del /q dist\move.exe
+if exist dist\FileMover.exe del /q dist\FileMover.exe
 
 echo.
 echo [3/4] Building executable with PyInstaller...
@@ -50,7 +51,10 @@ if errorlevel 1 (
 echo.
 echo [4/4] Build complete!
 echo.
-echo Executable location: dist\move.exe
+echo Executable location: dist\FileMover.exe
+echo.
+echo To build the installer, run:
+echo "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 echo.
 echo ========================================
 echo   Build Successful!

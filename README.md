@@ -5,21 +5,41 @@
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A Windows system tray application for automatic file organization based on file extensions with configurable delay-based moving.
+<div align="center">
+  
+### 🌐 [**Visit Website**](https://1110101.github.io/FileMover/) | 📦 [**Download**](https://github.com/1110101/FileMover/releases)
+
+</div>
+
+> ⚠️ **ALPHA VERSION - WORK IN PROGRESS**  
+> This software is in early development and only tested by the author. Use at your own risk. Backup important files before use.
+
+A Windows system tray application that automatically organizes your downloads folder. Files are moved to designated folders based on their extensions after a configurable delay.
 
 **Full Disclosure: Core logic self coded, all other stuff like GUI, Systray, Registry was vibe coded with gemini and cursor**
 
 ---
 
-**🇩🇪 Für deutschsprachige Nutzer:** FileMover ist eine Windows-Anwendung, die automatisch Dateien basierend auf Dateiendungen verschiebt. Die App kann im System Tray laufen und Ordner in Echtzeit überwachen. Haupt-Usecase ist das Verwalten und Organisieren des Downloadordners.
+**🇩🇪 Für deutschsprachige Nutzer:** FileMover organisiert automatisch deinen Download-Ordner. PDFs, Bilder, Videos und andere Dateien werden nach einer konfigurierbaren Wartezeit automatisch in die richtigen Ordner verschoben. Die App läuft unsichtbar im System Tray.
 
 ---
 
 ## Description
 
-FileMover monitors source folders in real-time and automatically moves files with specific extensions to target folders after a configurable wait time. The application runs in the background in the system tray and offers an optional GUI for configuration.
+**Primary Use Case: Downloads Folder Management**
 
-Mainly written to automatically move files out of a overflowing download folder.
+Your downloads folder gets messy fast. FileMover was specifically built to solve this problem by automatically sorting incoming files based on their extensions.
+
+**How it works:**
+1. A file lands in your downloads folder (e.g., a PDF)
+2. FileMover detects it instantly but waits (e.g., 5 minutes)
+3. This delay lets you open the file right away without it disappearing
+4. After the delay, FileMover automatically moves it to the right folder (e.g., Documents/PDFs)
+5. Your downloads folder stays clean without any manual sorting!
+
+**Why the delay?** Right after downloading, you usually want to open the file immediately. The delay ensures you can do that before the file gets moved. It also keeps your browser's download history intact.
+
+While primarily designed for downloads folders, FileMover can monitor any folders you need to keep organized.
 
 ## Features
 
@@ -40,17 +60,32 @@ Mainly written to automatically move files out of a overflowing download folder.
 
 ## Installation
 
-### Option 1: Pre-built .exe (Recommended for End Users)
+### Option 1: Installer (Recommended)
 
-**No Python or installation needed!**
+**No Python or dependencies needed!**
 
 1. Go to [Releases](https://github.com/1110101/FileMover/releases)
-2. Download the latest `move.exe`
+2. Download the latest `FileMover-*-Setup.exe` installer
+3. Run the installer and follow the setup wizard
+4. Features:
+   - Automatic uninstaller
+   - Start menu shortcuts
+   - Optional desktop icon
+   - Optional Windows autostart
+
+**Note:** Windows SmartScreen may show a warning because the app is not code-signed (certificates cost $70-800/year). Click "More info" → "Run anyway". This is normal for open-source software.
+
+### Option 2: Standalone Executable
+
+**Portable version, no installation needed!**
+
+1. Go to [Releases](https://github.com/1110101/FileMover/releases)
+2. Download `FileMover.exe`
 3. Run the `.exe` directly - done! 🎉
 
 The application will start immediately in the system tray.
 
-### Option 2: From Source (For Developers)
+### Option 3: From Source (For Developers)
 
 If you want to modify the code or build it yourself:
 
@@ -68,9 +103,14 @@ pip install -r requirements.txt
 
 ### Starting the Application
 
-**With the .exe:**
+**With the installer:**
 ```
-Double-click move.exe
+Use the Start Menu shortcut or desktop icon
+```
+
+**With the standalone .exe:**
+```
+Double-click FileMover.exe
 ```
 
 **From Source (Developers):**
@@ -126,26 +166,47 @@ The app starts in the system tray (bottom right of taskbar). Click the icon for 
 
 Closing the window does NOT quit the app - it continues running in the system tray. To completely quit the app: Right-click on system tray icon → "Quit"
 
-## Example Workflow
+## Typical Downloads Folder Setup
 
-1. Source folder: `D:/Downloads`
-2. Target folder: `D:/Documents/PDFs`
-3. Extensions: `.pdf`
-4. Delay: `5` minutes
-5. **Result**: When a PDF file appears in Downloads, it will be automatically moved to `D:/Documents/PDFs` after 5 minutes
+**Rule 1 - PDFs:**
+- Source: `C:/Users/YourName/Downloads`
+- Target: `D:/Documents/PDFs`
+- Extensions: `.pdf`
 
-**Why Delay?** Right after downloading you usually just want to open the file right away. This would be not possible then, also the chrome download history cannot find the file then.
+**Rule 2 - Images:**
+- Source: `C:/Users/YourName/Downloads`
+- Target: `D:/Pictures`
+- Extensions: `.jpg, .jpeg, .png, .heic`
 
-## Building the .exe Yourself (Optional)
+**Rule 3 - Videos:**
+- Source: `C:/Users/YourName/Downloads`
+- Target: `D:/Videos`
+- Extensions: `.mp4, .mkv, .avi`
 
-If you want to build the `.exe` yourself:
+**Rule 4 - Archives:**
+- Source: `C:/Users/YourName/Downloads`
+- Target: `D:/Downloads/Archives`
+- Extensions: `.zip, .rar, .7z, .tar`
 
-**Automatically with Build Script:**
+**Rule 5 - Executables:**
+- Source: `C:/Users/YourName/Downloads`
+- Target: `D:/Software`
+- Extensions: `.exe, .msi`
+
+**Delay Setting:** 5 minutes (recommended)
+
+**Result:** Your downloads folder automatically stays clean. Every file type goes to its designated location after you've had time to open it!
+
+## Building Yourself (For Developers)
+
+### Local Build
+
+**Quick build for testing:**
 ```bash
 build.bat
 ```
 
-**Manually:**
+**Manual build:**
 ```bash
 pip install -r requirements.txt
 pyinstaller move.spec
@@ -153,7 +214,36 @@ pyinstaller move.spec
 
 The `.exe` will be created in the `dist/` folder.
 
-**Note:** Usually you can simply use the pre-built `.exe` from the [Releases](https://github.com/1110101/FileMover/releases)!
+### Building the Installer
+
+**Requirements:**
+- [Inno Setup 6](https://jrsoftware.org/isinfo.php) installed
+
+**Steps:**
+```bash
+# 1. Build the executable
+build.bat
+
+# 2. Compile the installer
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+```
+
+The installer will be created in `installer_output/`.
+
+### Automated Builds
+
+The project uses GitHub Actions to automatically build both the standalone executable and installer for every release:
+- Triggered on Git tags (e.g., `v1.0.0`)
+- Builds are published to GitHub Releases
+- No need to commit `dist/` or `build/` folders
+
+**To create a new release:**
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+GitHub Actions will automatically build and publish the release.
 
 ## Configuration & Data Storage
 

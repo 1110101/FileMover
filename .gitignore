@@ -153,3 +153,6 @@ desktop.ini
 *.log
 test_files/
 
+# Installer output
+installer_output/
+

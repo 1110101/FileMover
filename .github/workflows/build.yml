@@ -1,4 +1,4 @@
-name: Build Executable
+name: Build and Release
 
 on:
   push:
@@ -27,10 +27,23 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install pyinstaller
         
     - name: Build with PyInstaller
       run: |
         pyinstaller move.spec --noconfirm --log-level ERROR
+        
+    - name: Verify executable
+      run: |
+        if (Test-Path "dist\FileMover.exe") {
+          Write-Host "✓ FileMover.exe created successfully"
+          $fileSize = (Get-Item "dist\FileMover.exe").Length / 1MB
+          Write-Host "File size: $([math]::Round($fileSize, 2)) MB"
+        } else {
+          Write-Error "✗ FileMover.exe not found!"
+          exit 1
+        }
+      shell: pwsh
         
     - name: Get version
       id: version
@@ -44,31 +57,93 @@ jobs:
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Building version: $VERSION"
         
-    - name: Upload artifact
+    - name: Install Inno Setup
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        choco install innosetup -y
+        
+    - name: Build installer
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+      shell: pwsh
+      
+    - name: Verify installer
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        $installerPath = Get-ChildItem -Path "installer_output" -Filter "FileMover-*-Setup.exe" -Recurse | Select-Object -First 1
+        if ($installerPath) {
+          Write-Host "✓ Installer created: $($installerPath.Name)"
+          $fileSize = $installerPath.Length / 1MB
+          Write-Host "File size: $([math]::Round($fileSize, 2)) MB"
+        } else {
+          Write-Error "✗ Installer not found!"
+          exit 1
+        }
+      shell: pwsh
+        
+    - name: Upload standalone executable
       uses: actions/upload-artifact@v4
       with:
-        name: FileMover-${{ steps.version.outputs.version }}-Windows
-        path: dist/move.exe
+        name: FileMover-${{ steps.version.outputs.version }}-Standalone
+        path: dist/FileMover.exe
+        retention-days: 90
+        
+    - name: Upload installer
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        name: FileMover-${{ steps.version.outputs.version }}-Installer
+        path: installer_output/*.exe
         retention-days: 90
         
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/move.exe
+        files: |
+          dist/FileMover.exe
+          installer_output/*.exe
         body: |
           ## FileMover ${{ steps.version.outputs.version }}
           
-          ### 📦 Download
-          Download the `move.exe` file below and run it on Windows.
+          > ### ⚠️ **ALPHA VERSION - WORK IN PROGRESS**
+          > This software is in early development and has only been tested by the author.  
+          > **Use at your own risk. Backup important files before use.**
+          
+          ### 📦 Installation Options
+          
+          **Option 1: Installer (Recommended)**
+          Download `FileMover-*-Setup.exe` for a complete installation with:
+          - Automatic uninstaller
+          - Start menu shortcuts
+          - Optional desktop icon
+          - Optional Windows autostart
+          
+          **Option 2: Standalone Executable**
+          Download `FileMover.exe` to run directly without installation (portable).
+          
+          ### ⚠️ Windows SmartScreen Warning
+          
+          These builds are **not code-signed** (certificates cost $300+/year). Windows SmartScreen may show a warning on first run:
+          1. Click "More info"
+          2. Click "Run anyway"
+          
+          This is normal for open-source software.
           
           ### 🚀 Features
-          See [README.md](https://github.com/${{ github.repository }}/blob/master/README.md) for full feature list and documentation.
           
-          ### 📋 Changelog
+          See [README.md](https://github.com/${{ github.repository }}/blob/master/README.md) for full documentation.
+          
+          ### 📋 What's Changed
+          
           See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) for detailed changes.
+          
+          ### 💻 Requirements
+          
+          - Windows 10 or higher
+          - No Python or other dependencies required
         draft: false
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
