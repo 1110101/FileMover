@@ -7,7 +7,7 @@ watchdog>=3.0.0
 pystray>=0.19.5
 
 # Image processing for systray icon
-Pillow>=10.0.0
+Pillow>=12.2.0
 
 # PyInstaller for creating .exe (optional, only needed for building)
 pyinstaller>=5.13.0
