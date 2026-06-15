@@ -10,5 +10,5 @@ pystray>=0.19.5
 Pillow>=10.0.0
 
 # PyInstaller for creating .exe (optional, only needed for building)
-pyinstaller>=5.13.0
+pyinstaller>=6.21.0
 
