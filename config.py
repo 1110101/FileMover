@@ -1,10 +1,9 @@
 """
 Configuration management using Windows Registry
 """
-import sys
 import json
+import sys
 import winreg
-
 
 REG_PATH = r"Software\FileMover\Config"
 REG_AUTOSTART_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"

@@ -4,10 +4,10 @@ File management, queue system, and watchdog event handling
 import os
 import shutil
 import threading
-import time
 from datetime import datetime, timedelta
-from watchdog.observers import Observer
+
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 
 class MoveRule:
@@ -16,12 +16,18 @@ class MoveRule:
     def __init__(self, source_folder, target_folder, extensions, log_callback=None):
         self.source_folder = source_folder
         self.target_folder = target_folder
-        self.extensions = extensions
+        # Ensure extensions always have a leading dot
+        self.extensions = [ext.strip() if ext.strip().startswith('.') else f".{ext.strip()}" for ext in extensions if ext.strip()]
         self.log_callback = log_callback or (lambda msg: None)
     
     def move_file(self, src_path, filename):
         """Move a single file according to this rule"""
         try:
+            # Prevent moving file to itself
+            if os.path.abspath(self.source_folder) == os.path.abspath(self.target_folder):
+                self.log_callback(f"Skipped (source and target are identical): {filename}")
+                return False
+
             # Check if file matches extensions
             matches = False
             for ext in self.extensions:
@@ -64,11 +70,11 @@ class MoveRule:
     def _is_file_unlocked(self, filepath):
         """Check if file is not locked by another process"""
         try:
-            # Try to open the file in exclusive mode
-            with open(filepath, 'a'):
+            # Try to open the file in read/write binary mode (without modifying mtime)
+            with open(filepath, 'rb+'):
                 pass
             return True
-        except (IOError, OSError):
+        except OSError:
             return False
 
 
@@ -181,7 +187,7 @@ class FileEventHandler(FileSystemEventHandler):
                     # Add to queue with timer
                     self.queue_manager.add_file(file_path, self.rule)
                     break
-        except Exception as e:
+        except Exception:
             pass  # Silently ignore errors during event handling
 
 
@@ -212,12 +218,21 @@ class FileObserverManager:
     def remove_rule(self, source_folder):
         """Remove a rule and stop observing its source folder"""
         if source_folder in self.observers:
-            self.observers[source_folder].stop()
+            obs = self.observers[source_folder]
+            obs.stop()
+            try:
+                obs.join(timeout=1.0)
+            except Exception:
+                pass
             del self.observers[source_folder]
     
     def stop_all(self):
         """Stop all observers"""
         for observer in self.observers.values():
             observer.stop()
+            try:
+                observer.join(timeout=1.0)
+            except Exception:
+                pass
         self.observers.clear()
 

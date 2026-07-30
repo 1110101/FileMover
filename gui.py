@@ -3,7 +3,7 @@ GUI components for FileMover application
 """
 import os
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 
 
 class FileMoverGUI:
@@ -122,35 +122,39 @@ class FileMoverGUI:
         
         # Settings row
         settings_frame = tk.Frame(section3)
-        settings_frame.grid(row=0, column=0, columnspan=3, pady=5)
+        settings_frame.grid(row=0, column=0, columnspan=3, pady=5, sticky="ew")
         
-        tk.Label(settings_frame, text="Wait Time:", font=('Segoe UI', 10)).pack(side=tk.LEFT, padx=(0, 5))
+        # Grouped Wait Time Sub-frame
+        wait_group = tk.LabelFrame(settings_frame, text="⏳ Wait Time", font=('Segoe UI', 9, 'bold'), padx=8, pady=5)
+        wait_group.pack(side=tk.LEFT, padx=(0, 15))
+        
         self.delay_var = tk.IntVar(value=self.app.delay_minutes)
-        delay_spinbox = tk.Spinbox(settings_frame, from_=1, to=60, textvariable=self.delay_var, width=5, font=('Segoe UI', 9))
-        delay_spinbox.pack(side=tk.LEFT, padx=5)
-        tk.Label(settings_frame, text="minutes", font=('Segoe UI', 10)).pack(side=tk.LEFT, padx=(0, 10))
-        tk.Button(settings_frame, text="Update", command=self._update_delay, font=('Segoe UI', 9)).pack(side=tk.LEFT, padx=5)
+        delay_spinbox = tk.Spinbox(wait_group, from_=1, to=60, textvariable=self.delay_var, width=4, font=('Segoe UI', 9))
+        delay_spinbox.pack(side=tk.LEFT, padx=(0, 3))
+        tk.Label(wait_group, text="min", font=('Segoe UI', 9)).pack(side=tk.LEFT, padx=(0, 8))
+        tk.Button(wait_group, text="Save", command=self._update_delay, font=('Segoe UI', 9, 'bold'), bg='#2196F3', fg='white', padx=6).pack(side=tk.LEFT)
         
-        # Auto-move toggle
-        self.auto_move_button = tk.Button(settings_frame, text="🟢 Auto-Move: ON", command=self._toggle_auto_move, 
-                                         width=20, font=('Segoe UI', 9, 'bold'), bg='#4CAF50', fg='white')
-        self.auto_move_button.pack(side=tk.LEFT, padx=10)
+        # Toggles Sub-frame
+        toggles_frame = tk.Frame(settings_frame)
+        toggles_frame.pack(side=tk.LEFT, pady=10)
+        
+        # AutoMove toggle
+        self.auto_move_button = tk.Button(toggles_frame, text="🟢 AutoMove: ON", command=self._toggle_auto_move, 
+                                         width=18, font=('Segoe UI', 9, 'bold'), bg='#4CAF50', fg='white')
+        self.auto_move_button.pack(side=tk.LEFT, padx=5)
         
         # Autostart toggle
         autostart_text = "✓ Autostart: ON" if self.app.is_autostart_enabled() else "Autostart: OFF"
-        self.autostart_button = tk.Button(settings_frame, text=autostart_text, command=self._toggle_autostart, 
-                                         width=18, font=('Segoe UI', 9))
+        self.autostart_button = tk.Button(toggles_frame, text=autostart_text, command=self._toggle_autostart, 
+                                         width=16, font=('Segoe UI', 9))
         self.autostart_button.pack(side=tk.LEFT, padx=5)
         
         # Action buttons
         action_frame = tk.Frame(section3)
-        action_frame.grid(row=1, column=0, columnspan=3, pady=10)
+        action_frame.grid(row=1, column=0, columnspan=3, pady=(10, 5))
         
-        tk.Button(action_frame, text="🚀 Move Now (Skip Wait)", command=self._move_now, width=25, font=('Segoe UI', 10, 'bold'), bg='#4CAF50', fg='white').pack(side=tk.LEFT, padx=5)
-        
-        self.dry_run_var = tk.BooleanVar()
-        tk.Checkbutton(action_frame, text="Dry Run (Test Mode)", variable=self.dry_run_var, font=('Segoe UI', 9)).pack(side=tk.LEFT, padx=5)
-        
+        tk.Button(action_frame, text="🚀 Move Now", command=self._move_now, width=20, font=('Segoe UI', 10, 'bold'), bg='#4CAF50', fg='white').pack(side=tk.LEFT, padx=5)
+        tk.Button(action_frame, text="🧪 Test Run", command=self._test_run, width=18, font=('Segoe UI', 9, 'bold')).pack(side=tk.LEFT, padx=5)
         tk.Button(action_frame, text="📊 Show Waiting Files", command=self._refresh_queue, width=22, font=('Segoe UI', 9)).pack(side=tk.LEFT, padx=5)
         
         # ==================== SECTION: Activity Log ====================
@@ -172,7 +176,7 @@ class FileMoverGUI:
         scrollbar_log.config(command=self.log_text.yview)
         
         # Status bar
-        self.status_bar = tk.Label(self.root, text="✓ Ready - Files will wait {} minute(s) before moving".format(self.app.delay_minutes), 
+        self.status_bar = tk.Label(self.root, text=f"✓ Ready - Files will wait {self.app.delay_minutes} minute(s) before moving", 
                                    bd=1, relief=tk.SUNKEN, anchor=tk.W, font=('Segoe UI', 9), bg='#E8F5E9')
         self.status_bar.grid(row=row, column=0, columnspan=3, sticky="ew", padx=5, pady=5)
         
@@ -196,12 +200,22 @@ class FileMoverGUI:
             self.status_bar.config(text="Error: Please fill in all fields")
             return
         
+        if os.path.abspath(source) == os.path.abspath(target):
+            self.status_bar.config(text="Error: Source and target folders cannot be identical", bg='#FFEBEE')
+            return
+        
         if not os.path.exists(source):
             self.status_bar.config(text="Error: Source folder does not exist")
             return
         
-        # Parse extensions
-        ext_list = [ext.strip() for ext in exts.split(",")]
+        # Parse and normalize extensions to always have leading dot
+        ext_list = []
+        for ext in exts.split(","):
+            ext_clean = ext.strip()
+            if ext_clean:
+                if not ext_clean.startswith('.'):
+                    ext_clean = '.' + ext_clean
+                ext_list.append(ext_clean)
         
         # Add rule
         try:
@@ -247,15 +261,15 @@ class FileMoverGUI:
         self._remove_rule()
     
     def _move_now(self):
-        """Manually trigger file moving for all rules"""
-        dry_run = self.dry_run_var.get()
-        if dry_run:
-            self.log("=== DRY RUN MODE - No files will be moved ===")
-        self.app.move_now(dry_run=dry_run)
-        if dry_run:
-            self.status_bar.config(text="Dry run completed - check log")
-        else:
-            self.status_bar.config(text="Files moved immediately")
+        """Manually trigger file moving for all rules immediately"""
+        self.app.move_now(dry_run=False)
+        self.status_bar.config(text="Files moved immediately")
+    
+    def _test_run(self):
+        """Run move check in test mode (dry run) without actually moving files"""
+        self.log("=== TEST RUN MODE - No files will be moved ===")
+        self.app.move_now(dry_run=True)
+        self.status_bar.config(text="Test run completed - check log")
     
     def _update_delay(self):
         """Update the delay setting"""
@@ -271,10 +285,10 @@ class FileMoverGUI:
         try:
             enabled = self.app.toggle_auto_move()
             if enabled:
-                self.auto_move_button.config(text="🟢 Auto-Move: ON", bg='#4CAF50')
+                self.auto_move_button.config(text="🟢 AutoMove: ON", bg='#4CAF50')
                 self.status_bar.config(text="✓ Automatic file moving enabled", bg='#E8F5E9')
             else:
-                self.auto_move_button.config(text="🔴 Auto-Move: OFF", bg='#F44336')
+                self.auto_move_button.config(text="🔴 AutoMove: OFF", bg='#F44336')
                 self.status_bar.config(text="⚠ Automatic file moving disabled - files won't be moved automatically", bg='#FFF3E0')
         except Exception as e:
             self.status_bar.config(text=f"❌ Error toggling auto-move: {e}", bg='#FFEBEE')
@@ -330,12 +344,22 @@ class FileMoverGUI:
             self.delay_var.set(self.app.delay_minutes)
     
     def log(self, message):
-        """Add message to log"""
+        """Add message to log (thread-safe)"""
         if self.log_text is None:
             return
         
-        self.log_text.insert(tk.END, message + "\n")
-        self.log_text.see(tk.END)
+        def append():
+            try:
+                if self.log_text:
+                    self.log_text.insert(tk.END, message + "\n")
+                    self.log_text.see(tk.END)
+            except Exception:
+                pass
+        
+        if self.root:
+            self.root.after(0, append)
+        else:
+            append()
     
     def show_window(self):
         """Show the GUI window (must be called from main thread)"""

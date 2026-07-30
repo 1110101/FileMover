@@ -5,6 +5,22 @@ All notable changes to FileMover will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-07-30
+
+### Fixed
+- **System Tray Quit Action:** Resolved background thread deadlock and Tkinter thread-safety issues during application shutdown.
+- **File Lock Timestamp Preservation:** Fixed file lock check (`_is_file_unlocked`) altering `mtime` and causing infinite watchdog trigger loops.
+
+### Added
+- **Comprehensive Integration Test Suite:** Added 8 end-to-end automated integration tests in `tests/test_integration.py` running on Python 3.13 / `uv`.
+- **Validation:** Added validation preventing identical source and target folder configurations.
+- **Extension Normalization:** Extensions without leading dots (e.g. `pdf`) are now automatically normalized to `.pdf`.
+
+### Changed
+- **Settings & Actions UI Redesign:** Grouped `Wait Time` setting with `Save` button, renamed `Auto-Move` to `AutoMove`, converted `Dry Run` mode to `Test Run` button, and removed redundant label parentheses.
+- **CI/CD Integration:** Registered integration test suite execution in GitHub Actions build workflow.
+- **Documentation:** Trimmed AI-generated slop from `README.md` and `index.html` for clearer, conciser documentation.
+
 ## [1.0.0] - 2025-10-22
 
 ### Added
@@ -41,5 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - File lock checking before moving
 - Safe error handling without data loss
 
+[1.1.0]: https://github.com/1110101/FileMover/releases/tag/v1.1.0
 [1.0.0]: https://github.com/1110101/FileMover/releases/tag/v1.0.0
 

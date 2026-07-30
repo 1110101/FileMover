@@ -7,12 +7,13 @@ import threading
 import tkinter as tk
 import traceback
 from datetime import datetime
-from PIL import Image, ImageDraw
+
 import pystray
+from PIL import Image, ImageDraw
 from pystray import MenuItem as item
 
 from config import ConfigManager
-from file_manager import MoveRule, FileQueueManager, FileObserverManager
+from file_manager import FileObserverManager, FileQueueManager, MoveRule
 from gui import FileMoverGUI
 
 
@@ -75,6 +76,9 @@ class FileMoverApp:
     
     def add_rule(self, source_folder, target_folder, extensions):
         """Add a new move rule"""
+        if os.path.abspath(source_folder) == os.path.abspath(target_folder):
+            raise Exception("Source folder and target folder cannot be identical")
+            
         # Check for duplicates
         for rule in self.rules:
             if (rule.source_folder == source_folder and 
@@ -211,7 +215,6 @@ class FileMoverApp:
                 self.gui.root.after(0, show)
             else:
                 # Create in main thread using a different approach
-                import time
                 # We can't safely create tkinter windows from threads
                 # So we'll set a flag and let the main thread handle it
                 pass
@@ -274,6 +277,9 @@ class FileMoverApp:
                     pass
                 import time
                 time.sleep(0.01)  # 10ms delay
+            
+            # Clean up after loop ends (runs on main thread)
+            self.quit_app()
         except KeyboardInterrupt:
             self.quit_app()
         except Exception:
@@ -332,7 +338,8 @@ class FileMoverApp:
     
     def _on_quit(self, icon, item):
         """Handle quit menu item"""
-        self.quit_app()
+        # Signal main thread to quit cleanly
+        self._running = False
 
 
 def write_crash_log(exception, exc_traceback):
@@ -358,7 +365,7 @@ def write_crash_log(exception, exc_traceback):
             
             # Exception info
             f.write(f"Exception Type: {type(exception).__name__}\n")
-            f.write(f"Exception Message: {str(exception)}\n\n")
+            f.write(f"Exception Message: {exception!s}\n\n")
             
             # Full traceback
             f.write("Traceback:\n")
@@ -392,13 +399,13 @@ def main():
                     "FileMover Crash",
                     f"FileMover has encountered an error and needs to close.\n\n"
                     f"Error details have been saved to:\n{log_file}\n\n"
-                    f"Error: {str(e)}"
+                    f"Error: {e!s}"
                 )
             else:
                 messagebox.showerror(
                     "FileMover Crash",
                     f"FileMover has encountered an error and needs to close.\n\n"
-                    f"Error: {str(e)}"
+                    f"Error: {e!s}"
                 )
         except Exception:
             pass
