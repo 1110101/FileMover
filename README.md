@@ -1,6 +1,6 @@
 # FileMover
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/1110101/FileMover/releases)
+[![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)](https://github.com/1110101/FileMover/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -8,6 +8,14 @@
 > 🚧 **Work in Progress** • Mostly AI Vibe Coded
 
 An automated Windows system tray application that keeps your downloads folder organized. FileMover monitors incoming downloads and automatically sorts files into designated target folders based on file extensions after a configurable wait time.
+
+🇩🇪 **Auf Deutsch:** Eine Windows-Systray-Anwendung zum automatischen Sortieren und Verschieben von Dateien basierend auf Dateiendungen mit konfigurierbarer Verzögerung.
+
+---
+
+## 🎯 Why This Exists
+
+I vibe coded this for me, as there was no other tool with that feature set. It works, the code is probably ugly, but we have 2026.
 
 ---
 
@@ -35,7 +43,7 @@ An automated Windows system tray application that keeps your downloads folder or
 ## 📦 Installation
 
 ### Option 1: Installer
-Download `FileMover-1.1.0-Setup.exe` from [Releases](https://github.com/1110101/FileMover/releases) for a complete setup with Start Menu shortcuts and uninstaller support.
+Download `FileMover-1.1.2-Setup.exe` from [Releases](https://github.com/1110101/FileMover/releases) for a complete setup with Start Menu shortcuts and uninstaller support.
 
 ### Option 2: Portable Executable
 Download `FileMover.exe` from [Releases](https://github.com/1110101/FileMover/releases) to run directly without installation.
@@ -62,18 +70,6 @@ FileMover includes a comprehensive integration test suite running on Python 3.13
 
 ```bash
 uv run tests/test_integration.py
-```
-
----
-
-## 🛠️ Project Architecture
-
-```text
-move.py          - Main entry point, system tray lifecycle, and event loop
-gui.py           - Tkinter user interface & thread-safe logging
-file_manager.py  - FileQueueManager, FileObserverManager, and MoveRule logic
-config.py        - Windows Registry configuration management via winreg
-tests/           - Automated integration test suite
 ```
 
 ---
