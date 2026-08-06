@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PyInstaller Specification:** Updated `move.spec` path resolution (`pathex`) to relative directory for portable multi-platform builds.
 - **Installer Build Script:** Updated Inno Setup installer metadata (`installer.iss`) for v1.1.1 build generation.
 
+### Security
+- **Dependencies:** Upgraded `watchdog` (>=6.0.0), `Pillow` (>=12.3.0), and `pyinstaller` (>=6.21.0).
+
 ## [1.1.0] - 2026-07-30
 
 ### Fixed
