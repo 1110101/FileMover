@@ -232,7 +232,7 @@ class FileMoverApp:
         if self.gui.root:
             try:
                 self.gui.root.quit()
-            except:
+            except Exception:
                 pass
         self.gui.destroy()
     

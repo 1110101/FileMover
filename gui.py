@@ -54,7 +54,7 @@ class FileMoverGUI:
         try:
             from ctypes import windll
             windll.shcore.SetProcessDpiAwareness(1)
-        except:
+        except Exception:
             pass
         
         row = 0
@@ -392,6 +392,6 @@ class FileMoverGUI:
             try:
                 self.root.quit()
                 self.root.destroy()
-            except:
+            except Exception:
                 pass
             self.root = None
