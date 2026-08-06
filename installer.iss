@@ -2,7 +2,7 @@
 ; Automatically creates installer with uninstaller for Windows
 
 #define MyAppName "FileMover"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.1"
 #define MyAppPublisher "FileMover"
 #define MyAppURL "https://github.com/1110101/FileMover"
 #define MyAppExeName "FileMover.exe"

@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['move.py'],
-    pathex=['D:\\Coding\\FileMover'],
+    pathex=['.'],
     binaries=[],
     datas=[],
     hiddenimports=[

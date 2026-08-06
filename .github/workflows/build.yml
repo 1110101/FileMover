@@ -114,9 +114,7 @@ jobs:
         body: |
           ## FileMover ${{ steps.version.outputs.version }}
           
-          > ### ⚠️ **ALPHA VERSION - WORK IN PROGRESS**
-          > This software is in early development and has only been tested by the author.  
-          > **Use at your own risk. Backup important files before use.**
+          > 🚧 **Work in Progress** • Mostly AI Vibe Coded
           
           ### 📦 Installation Options
           
