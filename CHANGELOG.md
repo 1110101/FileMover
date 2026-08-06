@@ -5,16 +5,16 @@ All notable changes to FileMover will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2026-08-07
+## [1.1.0] - 2026-08-07
 
 ### Fixed
+- **System Tray Quit Action:** Resolved background thread deadlock and Tkinter thread-safety issues during application shutdown.
+- **File Lock Timestamp Preservation:** Fixed file lock check (`_is_file_unlocked`) altering `mtime` and causing infinite watchdog trigger loops.
 - **PyInstaller Specification:** Updated `move.spec` path resolution (`pathex`) to relative directory for portable multi-platform builds.
-- **Installer Build Script:** Updated Inno Setup installer metadata (`installer.iss`) for v1.1.1 build generation.
+- **Installer Build Script:** Updated Inno Setup installer metadata (`installer.iss`) for v1.1.0 build generation.
 
 ### Security
 - **Dependencies:** Upgraded `watchdog` (>=6.0.0), `Pillow` (>=12.3.0), and `pyinstaller` (>=6.21.0).
-
-## [1.1.0] - 2026-07-30
 
 ### Fixed
 - **System Tray Quit Action:** Resolved background thread deadlock and Tkinter thread-safety issues during application shutdown.
