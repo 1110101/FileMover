@@ -1,7 +1,7 @@
 # FileMover Dependencies
 
 # File system monitoring
-watchdog>=3.0.0
+watchdog>=6.0.0
 
 # Systray integration
 pystray>=0.19.5
