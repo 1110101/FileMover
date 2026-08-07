@@ -26,5 +26,5 @@ jobs:
         
     - name: Lint with ruff
       run: |
-        ruff check .
+        ruff check --select E,F .
 
