@@ -29,8 +29,13 @@ SolidCompression=yes
 ; Windows version requirements
 MinVersion=10.0
 ; Privileges
-PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+PrivilegesRequired=admin
+UsePreviousAppDir=yes
+UsePreviousGroup=yes
+UsePreviousTasks=yes
+UsePreviousLanguage=yes
+CloseApplications=yes
+UsedUserAreasWarning=no
 ; Uninstall settings
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
@@ -64,21 +69,18 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: """{app}\{#MyAppExeName}"""; Flags: uninsdeletevalue; Tasks: autostart
 
 [Code]
-procedure CurStepChanged(CurStep: TSetupStep);
+function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   ResultCode: Integer;
 begin
-  if CurStep = ssPostInstall then
-  begin
-    // Kill any running instances before installation
-    Exec('taskkill', '/F /IM FileMover.exe /T', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  end;
+  // Terminate any running instances before installation to prevent locked files
+  Exec('taskkill', '/F /IM FileMover.exe /T', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Result := '';
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   ResultCode: Integer;
-  RegKey: String;
 begin
   if CurUninstallStep = usUninstall then
   begin

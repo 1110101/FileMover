@@ -1,0 +1,2 @@
+# Husky pre-commit hook: Verify linting, formatting, and integration tests
+npm run check

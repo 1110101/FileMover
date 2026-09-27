@@ -156,3 +156,6 @@ test_files/
 # Installer output
 installer_output/
 
+# Node / npm
+node_modules/
+

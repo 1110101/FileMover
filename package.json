@@ -1,0 +1,39 @@
+{
+  "name": "filemover",
+  "version": "1.1.2",
+  "description": "Automated Windows system tray application that keeps your downloads folder organized.",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint": "ruff check .",
+    "lint:fix": "ruff check --fix .",
+    "format": "ruff format .",
+    "format:check": "ruff format --check .",
+    "test": "python tests/test_integration.py",
+    "check": "npm run lint && npm run format:check && npm run test",
+    "build:exe": "pyinstaller move.spec --noconfirm",
+    "build:installer": "iscc installer.iss",
+    "build": "npm run build:exe && npm run build:installer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1110101/FileMover.git"
+  },
+  "keywords": [
+    "windows",
+    "system-tray",
+    "file-organizer",
+    "automation",
+    "python",
+    "watchdog"
+  ],
+  "author": "1110101",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

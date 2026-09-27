@@ -1,0 +1,3 @@
+#!/bin/sh
+# Husky pre-push hook: Run tests before pushing to remote
+npm run test
