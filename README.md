@@ -1,6 +1,6 @@
 # FileMover
 
-[![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)](https://github.com/1110101/FileMover/releases)
+[![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)](https://github.com/1110101/FileMover/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -43,7 +43,7 @@ I vibe coded this for me, as there was no other tool with that feature set. It w
 ## 📦 Installation
 
 ### Option 1: Installer
-Download `FileMover-1.1.2-Setup.exe` from [Releases](https://github.com/1110101/FileMover/releases) for a complete setup with Start Menu shortcuts and uninstaller support.
+Download `FileMover-1.1.3-Setup.exe` from [Releases](https://github.com/1110101/FileMover/releases) for a complete setup with Start Menu shortcuts and uninstaller support.
 
 ### Option 2: Portable Executable
 Download `FileMover.exe` from [Releases](https://github.com/1110101/FileMover/releases) to run directly without installation.

@@ -5,6 +5,18 @@ All notable changes to FileMover will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-10-27
+
+### Fixed
+- **Rule Editing:** A failed edit no longer deletes the original rule. The new configuration is validated before it replaces the old one.
+- **AutoMove Button:** The toggle now reflects the saved state after a restart.
+- **Folder Comparison:** Source and target folders are compared case-insensitively, which prevents an endless rename loop for identical folders.
+- **Queue Cleanup:** Removing or editing a rule cancels its pending moves.
+- **Incomplete Downloads:** Further writes restart the wait time, and files are held while a browser temp file such as `.part` or `.crdownload` still exists.
+
+### Changed
+- **Dependencies:** Upgraded `pyinstaller` (>=6.22.3).
+
 ## [1.1.2] - 2026-08-07
 
 ### Fixed
