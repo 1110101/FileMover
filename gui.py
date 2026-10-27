@@ -7,6 +7,8 @@ import os
 import tkinter as tk
 from tkinter import filedialog, ttk
 
+from file_manager import is_same_folder
+
 
 class FileMoverGUI:
     """Main GUI window for FileMover."""
@@ -202,15 +204,13 @@ class FileMoverGUI:
 
         self.auto_move_button = tk.Button(
             toggles_frame,
-            text="AutoMove: ON",
             command=self._toggle_auto_move,
             width=16,
             font=("Segoe UI", 9),
-            bg="#2e7d32",
-            fg="white",
             relief=tk.GROOVE,
         )
         self.auto_move_button.pack(side=tk.LEFT, padx=5, pady=4)
+        self.update_auto_move_button()
 
         autostart_text = (
             "Autostart: ON" if self.app.is_autostart_enabled() else "Autostart: OFF"
@@ -304,7 +304,7 @@ class FileMoverGUI:
             self._set_status("Please fill in all rule fields", error=True)
             return
 
-        if os.path.abspath(source) == os.path.abspath(target):
+        if is_same_folder(source, target):
             self._set_status(
                 "Source folder and target folder cannot be identical", error=True
             )
@@ -318,9 +318,7 @@ class FileMoverGUI:
 
         try:
             if self._editing_index is not None:
-                index = self._editing_index
-                self.app.remove_rule(index)
-                self.app.add_rule(source, target, ext_list)
+                self.app.update_rule(self._editing_index, source, target, ext_list)
                 self._set_status(f"Updated rule: {source} -> {target}")
                 self._cancel_edit()
             else:
@@ -451,15 +449,10 @@ class FileMoverGUI:
         """Toggle auto-move active state."""
         try:
             enabled = self.app.toggle_auto_move()
+            self.update_auto_move_button()
             if enabled:
-                self.auto_move_button.config(
-                    text="AutoMove: ON", bg="#2e7d32", fg="white"
-                )
                 self._set_status("Automatic file moving enabled")
             else:
-                self.auto_move_button.config(
-                    text="AutoMove: OFF", bg="#c62828", fg="white"
-                )
                 self._set_status("Automatic file moving paused")
         except Exception as e:  # noqa: BLE001 - UI boundary, error is shown in the status bar
             self._set_status(f"Error toggling auto-move: {e}", error=True)
@@ -475,6 +468,18 @@ class FileMoverGUI:
                 self._set_status("Windows autostart disabled")
         except Exception as e:  # noqa: BLE001 - UI boundary, error is shown in the status bar
             self._set_status(f"Error toggling autostart: {e}", error=True)
+
+    def update_auto_move_button(self) -> None:
+        """Reflect the persisted auto-move state on the toggle button."""
+        if self.auto_move_button:
+            if self.app.is_auto_move_enabled():
+                self.auto_move_button.config(
+                    text="AutoMove: ON", bg="#2e7d32", fg="white"
+                )
+            else:
+                self.auto_move_button.config(
+                    text="AutoMove: OFF", bg="#c62828", fg="white"
+                )
 
     def update_autostart_button(self) -> None:
         """Update autostart button text and color."""

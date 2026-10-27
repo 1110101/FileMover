@@ -24,6 +24,21 @@ def normalize_extension(ext: str) -> str:
     return clean
 
 
+TEMP_DOWNLOAD_SUFFIXES = (".part", ".crdownload", ".download", ".partial", ".tmp")
+
+
+def is_same_folder(first: str, second: str) -> bool:
+    """Compare folder paths the way Windows does, ignoring case and separators."""
+    return os.path.normcase(os.path.abspath(first)) == os.path.normcase(
+        os.path.abspath(second)
+    )
+
+
+def is_download_in_progress(file_path: str) -> bool:
+    """Detect a browser placeholder whose payload is still written to a sibling temp file."""
+    return any(os.path.exists(file_path + suffix) for suffix in TEMP_DOWNLOAD_SUFFIXES)
+
+
 def resolve_collision_path(target_folder: str, filename: str) -> str:
     """Generate a non-colliding file path in the target folder by appending an index."""
     dst_path = os.path.join(target_folder, filename)
@@ -89,9 +104,7 @@ class MoveRule:
                 self.log_callback(f"File no longer exists: {filename}")
                 return False
 
-            if os.path.abspath(self.source_folder) == os.path.abspath(
-                self.target_folder
-            ):
+            if is_same_folder(self.source_folder, self.target_folder):
                 self.log_callback(
                     f"Skipped (source and target are identical): {filename}"
                 )
@@ -177,15 +190,20 @@ class FileQueueManager:
         """Add a file to the queue with a timer."""
         norm_path = os.path.abspath(file_path)
         with self.lock:
-            if norm_path in self.queue:
-                return
-
             delay_secs = max(0, self.delay_minutes * 60)
             target_time = datetime.now().astimezone() + timedelta(seconds=delay_secs)
+            existing = self.queue.get(norm_path)
 
-            timer = threading.Timer(delay_secs, self._process_file, args=(norm_path,))
-            timer.daemon = True
-            timer.start()
+            if existing is not None:
+                # Further writes restart the wait so a file is only moved once it stays quiet
+                if existing.retries == 0:
+                    existing.timer.cancel()
+                    existing.timer = self._start_timer(delay_secs, norm_path)
+                    existing.target_time = target_time
+                    existing.rule = rule
+                return
+
+            timer = self._start_timer(delay_secs, norm_path)
 
             self.queue[norm_path] = QueueEntry(
                 timer=timer,
@@ -214,6 +232,17 @@ class FileQueueManager:
             self.log_callback(f"File no longer exists: {filename}")
             return
 
+        if is_download_in_progress(file_path):
+            with self.lock:
+                if self.queue.get(file_path) is entry:
+                    delay_secs = max(0, self.delay_minutes * 60)
+                    entry.target_time = datetime.now().astimezone() + timedelta(
+                        seconds=delay_secs
+                    )
+                    entry.timer = self._start_timer(delay_secs, file_path)
+            self.log_callback(f"Download still in progress, waiting: {filename}")
+            return
+
         success = entry.rule.move_file(file_path, filename)
 
         if success:
@@ -222,7 +251,7 @@ class FileQueueManager:
             return
 
         with self.lock:
-            if file_path not in self.queue:
+            if self.queue.get(file_path) is not entry:
                 return
 
             if entry.retries < self.max_retries:
@@ -230,13 +259,7 @@ class FileQueueManager:
                 entry.target_time = datetime.now().astimezone() + timedelta(
                     seconds=self.retry_delay_seconds
                 )
-                entry.timer = threading.Timer(
-                    self.retry_delay_seconds,
-                    self._process_file,
-                    args=(file_path,),
-                )
-                entry.timer.daemon = True
-                entry.timer.start()
+                entry.timer = self._start_timer(self.retry_delay_seconds, file_path)
                 self.log_callback(
                     f"Retry {entry.retries}/{self.max_retries} scheduled for {filename} in {self.retry_delay_seconds}s"
                 )
@@ -245,6 +268,20 @@ class FileQueueManager:
                 self.log_callback(
                     f"Gave up moving {filename} after {self.max_retries} attempts (file locked or inaccessible)"
                 )
+
+    def _start_timer(self, delay_secs: float, file_path: str) -> threading.Timer:
+        timer = threading.Timer(delay_secs, self._process_file, args=(file_path,))
+        timer.daemon = True
+        timer.start()
+        return timer
+
+    def remove_rule_entries(self, rule: MoveRule) -> None:
+        """Cancel pending moves that belong to a rule which is being removed."""
+        with self.lock:
+            for file_path, entry in list(self.queue.items()):
+                if entry.rule is rule:
+                    entry.timer.cancel()
+                    del self.queue[file_path]
 
     def get_queue_status(self) -> list[dict[str, object]]:
         """Get list of files currently in queue with remaining time."""

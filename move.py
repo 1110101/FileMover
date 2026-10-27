@@ -14,7 +14,12 @@ from PIL import Image, ImageDraw
 from pystray import MenuItem as item
 
 from config import ConfigManager
-from file_manager import FileObserverManager, FileQueueManager, MoveRule
+from file_manager import (
+    FileObserverManager,
+    FileQueueManager,
+    MoveRule,
+    is_same_folder,
+)
 from gui import FileMoverGUI
 
 
@@ -87,37 +92,70 @@ class FileMoverApp:
         ]
         self.config.save_rules(rules_data)
 
+    def _build_rule(
+        self,
+        source_folder: str,
+        target_folder: str,
+        extensions: list[str],
+        ignore_index: int | None = None,
+    ) -> MoveRule:
+        """Create a validated rule without registering it."""
+        if is_same_folder(source_folder, target_folder):
+            raise ValueError("Source folder and target folder cannot be identical")
+
+        rule = MoveRule(source_folder, target_folder, extensions, self._log)
+        if any(
+            existing == rule
+            for i, existing in enumerate(self.rules)
+            if i != ignore_index
+        ):
+            raise ValueError("Rule already exists")
+        return rule
+
+    def _detach_rule(self, rule: MoveRule) -> None:
+        self.observer_manager.remove_rule(rule)
+        self.queue_manager.remove_rule_entries(rule)
+
+    def _attach_rule(self, rule: MoveRule) -> None:
+        if os.path.exists(rule.source_folder):
+            self.observer_manager.add_rule(rule)
+
     def add_rule(
         self, source_folder: str, target_folder: str, extensions: list[str]
     ) -> None:
         """Add a new move rule."""
-        norm_source = os.path.abspath(source_folder)
-        norm_target = os.path.abspath(target_folder)
-
-        if norm_source == norm_target:
-            raise ValueError("Source folder and target folder cannot be identical")
-
-        rule = MoveRule(norm_source, norm_target, extensions, self._log)
-
-        for existing in self.rules:
-            if (
-                existing.source_folder == rule.source_folder
-                and existing.target_folder == rule.target_folder
-                and existing.extensions == rule.extensions
-            ):
-                raise ValueError("Rule already exists")
-
+        rule = self._build_rule(source_folder, target_folder, extensions)
         self.rules.append(rule)
-        if os.path.exists(rule.source_folder):
-            self.observer_manager.add_rule(rule)
+        self._attach_rule(rule)
         self._save_rules()
         self._log(f"Added rule: {rule.source_folder} -> {rule.target_folder}")
+
+    def update_rule(
+        self,
+        index: int,
+        source_folder: str,
+        target_folder: str,
+        extensions: list[str],
+    ) -> None:
+        """Replace a rule only after the new configuration passed validation."""
+        if not 0 <= index < len(self.rules):
+            raise IndexError("Rule index out of range")
+
+        new_rule = self._build_rule(
+            source_folder, target_folder, extensions, ignore_index=index
+        )
+        old_rule = self.rules[index]
+        self._detach_rule(old_rule)
+        self.rules[index] = new_rule
+        self._attach_rule(new_rule)
+        self._save_rules()
+        self._log(f"Updated rule: {new_rule.source_folder} -> {new_rule.target_folder}")
 
     def remove_rule(self, index: int) -> None:
         """Remove a rule by index."""
         if 0 <= index < len(self.rules):
             rule = self.rules[index]
-            self.observer_manager.remove_rule(rule)
+            self._detach_rule(rule)
             del self.rules[index]
             self._save_rules()
             self._log(f"Removed rule: {rule.source_folder} -> {rule.target_folder}")
